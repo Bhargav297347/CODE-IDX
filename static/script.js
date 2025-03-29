@@ -16,7 +16,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const PREVIEW_SIZE = document.getElementById('preview-size');
     const editorToggleButton = document.getElementById('editor-toggle-btn');
     const previewToggleButton = document.getElementById('preview-toggle-btn');
-
     function showEditor() {
         editorPane.style.display = 'flex';
         previewPane.style.display = 'none';
@@ -561,10 +560,9 @@ previewIframe.srcdoc = code;
             if (currentMode === 'html') {
                 currentMode = 'python';
                 editorInstance.session.setMode('ace/mode/python');
-                // Corrected Python mode visibility logic:
-                previewArea.style.display = 'flex'; // Ensure preview area is visible
-                previewBox.style.display = 'none'; // Hide the HTML preview box (iframe and handles)
-                PYTHON_TERMINAL.style.display = 'flex'; // Show the Python terminal
+                previewArea.style.display = 'flex';
+                previewBox.style.display = 'none';
+                PYTHON_TERMINAL.style.display = 'flex';
                 PREVIEW_SIZE.style.display = "none";
                 LIVE.innerText = "Connected to Python";
                 RUN.style.display = "flex";
@@ -576,17 +574,17 @@ previewIframe.srcdoc = code;
             } else {
                 currentMode = 'html';
                 editorInstance.session.setMode('ace/mode/html');
-                previewArea.style.display = 'flex'; // Ensure preview area is visible
-                previewBox.style.display = 'flex'; // Show the HTML preview box
+                previewArea.style.display = 'flex';
+                previewBox.style.display = 'flex'; 
                 openPreviewTabBtn.style.display = "flex";
                 terminalDiv.style.display = "flex";
                 RUN.style.display = "none";
                 LIVE.innerText = "Live";
                 terminalBtn.style.display = "flex";
                 editorInstance.setValue(HTML_THEME);
-                PYTHON_TERMINAL.style.display = 'none'; // Hide the Python terminal
+                PYTHON_TERMINAL.style.display = 'none'; 
                 PREVIEW_SIZE.style.display = "flex";
-                terminalDiv.style.display = 'none'; // Keep this to hide general terminal when switching back to HTML, or remove to keep it visible
+                terminalDiv.style.display = 'none';
                 openFilesButton.querySelector('span').textContent = 'Switch to Python';
                 updatePreview();
                 logToTerminal('Switched to HTML mode. Preview activated.');
@@ -816,7 +814,6 @@ previewIframe.srcdoc = code;
             })
             .then(response => {
                 if (!response.ok) {
-
                     return response.text().then(text => {
                         throw new Error(`HTTP error! Status: ${response.status} - ${response.statusText}. Body: ${text || '(empty)'}`);
                     });
@@ -848,10 +845,9 @@ previewIframe.srcdoc = code;
                 originalButtonTextEl.textContent = originalButtonText;
             });
         });
-        
     async function executeCode() {
-        const code = editorInstance.getValue(); // **Correctly get code from Ace Editor**
-        const outputDiv = PYTHON_TERMINAL; // Use the PYTHON_TERMINAL variable defined in script.js
+        const code = editorInstance.getValue();
+        const outputDiv = PYTHON_TERMINAL;
         console.log("clicked")
         try {
             const response = await fetch("https://python-4b0j.onrender.com/execute", {
@@ -872,7 +868,7 @@ previewIframe.srcdoc = code;
             const formattedText = data.output.replace(/\n/g, "<br>");  
             outputDiv.innerHTML = ( formattedText || data.error);
         } catch (error) {
-            outputDiv.innerHTML = errorData; // Improved error message
+            outputDiv.innerHTML = errorData;
             console.error("Fetch Error:", error); 
         }
     }
