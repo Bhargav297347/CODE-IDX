@@ -1,0 +1,15 @@
+{# templates/preview_render.html #}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Live Preview</title>
+    {# We don't add any default styles or scripts here to avoid interfering #}
+    {# with the user's code unless absolutely necessary. #}
+</head>
+<body>
+    {# WARNING: Using |safe renders the HTML exactly as provided. #}
+    {# This is necessary for preview but carries XSS risks if the #}
+    {# source of the code is not trusted. #}
+    {{ user_code|safe }}
+</body>
+</html>
