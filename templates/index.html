@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CODE IDX</title>
+    <link rel="icon" href="https://i.postimg.cc/vTwk547B/IMG-20250330-WA0003.jpg" type="image/x-icon">
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='landing.css') }}">
+  </head>
+  <body>
+    <div class="container">
+      <div class="editor size" id="editor-pane">
+        <div class="navbar navbar-style editor-navbar">
+           <div class="editor-controls left">
+             <button id="open-files" class="editor-btn" title="Open Local Files / Switch Mode">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+             </svg>
+               <span>Switch to Python</span>
+             </button>
+</div>
+       <div class="editor-controls right">
+         <button id="copy-all-btn" class="editor-btn" title="Copy All Code">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+        </svg>
+           <span>Copy All</span>
+         </button>
+         <button id="clear-all-btn" class="editor-btn" title="Clear Editor">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="3 6 5 6 21 6"></polyline>
+            <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path>
+            <path d="M10 11v6"></path>
+            <path d="M14 11v6"></path>
+            <path d="M9 6V3h6v3"></path>
+        </svg>
+           <span>Clear All</span>
+         </button>
+       </div>
+    </div>
+    <div id="editor-container"></div>
+  </div>
+  <div class="preview size" id="preview-pane">
+    <div class="navbar2 navbar-style"> 
+      <div class="preview-bar">
+        <div class="preview-bar-wrapper" id="preview-bar-wrapper">
+          <div class="loader">
+            <div class="mini"></div>
+          </div>
+          <p id="live">Live</p>
+        </div>
+      </div>
+      <div class="run-python" id="run-python">Run</div>
+      <style>
+        .run-python{
+          cursor: pointer;
+          font-weight: bold;
+          border-radius: 30px;
+          border: 2px solid #eee;
+          width: 60px;
+          padding: 5px;
+          display: none;
+          justify-content: center;
+          &:active{
+            background-color: #eee;
+          }
+        }
+      </style>
+      <div class="terminal-controls">
+        <svg id="terminal-btn" class="terminal" width="20" height="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" title="Toggle Console">
+          <rect width="24" height="24" fill="black" rx="4"></rect>
+          <path d="M6 8l4 4-4 4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+          <path d="M14 16h4" stroke="white" stroke-width="2" stroke-linecap="round"></path>
+      </svg>
+      </div>
+      <div class="force-refresh">
+          <p id="refresh-btn" style="gap: 5px;" title="Refresh Inline Preview">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 2v6h-6"></path>
+              <path d="M3 12a9 9 0 0 1 15-6.7L21 8"></path>
+              <path d="M3 22v-6h6"></path>
+              <path d="M21 12a9 9 0 0 1-15 6.7L3 16"></path>
+          </svg>
+          Refresh </p>
+          <p id="hard-reset-btn" style="gap: 5px;" title="Force Full Reload of Inline Preview"> <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M2 12a10 10 0 1 1 6 9.3"></path>
+            <path d="M2 12V2h10"></path>
+            <path d="M9 13V9"></path>
+            <path d="M15 13V9"></path>
+        </svg>
+        Hard Reset </p>
+      </div> 
+      <div class="external-preview">
+        <button id="open-preview-tab-btn" class="editor-btn preview-tab-btn" title="Open preview in new tab">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 3h7v7"></path>
+            <path d="M14 10 21 3"></path>
+            <path d="M9 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-4"></path>
+        </svg>
+           <span>New Tab</span>
+        </button>
+      </div>
+      <div class="download" title="Download Code as HTML file">
+         <svg id="download-btn-svg" width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+             <path d="M24 4V32M24 32L14 22M24 32L34 22M8 40H40" stroke="black" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+         </svg>
+      </div>
+    </div>
+    <div class="preview-part" id="preview-area">
+      <div class="size-controls left" id="preview-size">
+        <div class="dimension-input">
+          <label for="width-input">Width:</label>
+          <input type="number" id="width-input" value="300">
+        </div>
+        <div class="dimension-input">
+          <label for="height-input">Height:</label>
+          <input type="number" id="height-input" value="200">
+        </div>
+      </div>
+      <div id="python-terminal"></div>
+
+        <div id="preview-box"> 
+            <div class="resize-handle resize-handle-left" id="resize-handle-left"></div>
+            <div class="resize-handle resize-handle-right" id="resize-handle-right"></div>
+            <div class="resize-handle resize-handle-top" id="resize-handle-top"></div>
+            <div class="resize-handle resize-handle-bottom" id="resize-handle-bottom"></div>
+            <iframe id="preview-iframe" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals"></iframe>
+        </div>
+    </div>
+    <div id="terminal" style="display: none;">
+      <div class="terminal-nav">
+        <p>Console </p>
+        <p id="close-terminal-btn" style="cursor: pointer;" title="Close Console"> × </p>
+      </div>
+      <div class="terminal-content">  
+      </div>
+    </div>
+  </div>
+</div>
+<div class="mobile-toggle-bar">
+  <button class="mobile-toggle-btn active" id="preview-toggle-btn">Preview</button>
+  <button class="mobile-toggle-btn" id="editor-toggle-btn">Editor</button>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.31.1/ace.js" type="text/javascript" charset="utf-8"></script>
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+<script src="{{ url_for('static', filename='language.js') }}"></script>
+<!-- Handle Python codes-->
+</script>
+</body>
+</html>
